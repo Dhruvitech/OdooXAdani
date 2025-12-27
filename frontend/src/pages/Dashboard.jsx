@@ -1,7 +1,7 @@
 import { useAuth } from '../context/AuthContext';
 import { useEffect, useState } from 'react';
 import Card from '../components/common/Card';
-import { getDashboardStats } from '../services/statsService';
+import { getDashboardStats, getRecentActivities } from '../services/statsService';
 
 const Dashboard = () => {
     const { user } = useAuth();
@@ -11,7 +11,9 @@ const Dashboard = () => {
         completedRequests: 0,
         totalTeams: 0
     });
+    const [activities, setActivities] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [activitiesLoading, setActivitiesLoading] = useState(true);
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -28,8 +30,38 @@ const Dashboard = () => {
             }
         };
 
+        const fetchActivities = async () => {
+            try {
+                setActivitiesLoading(true);
+                const response = await getRecentActivities();
+                if (response.success) {
+                    setActivities(response.data);
+                }
+            } catch (error) {
+                console.error('Failed to fetch recent activities:', error);
+            } finally {
+                setActivitiesLoading(false);
+            }
+        };
+
         fetchStats();
+        fetchActivities();
     }, []);
+
+    const formatTimestamp = (timestamp) => {
+        const date = new Date(timestamp);
+        const now = new Date();
+        const diffMs = now - date;
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMs / 3600000);
+        const diffDays = Math.floor(diffMs / 86400000);
+
+        if (diffMins < 1) return 'Just now';
+        if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
+        if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+        if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+        return date.toLocaleDateString();
+    };
 
     return (
         <div>
@@ -75,22 +107,46 @@ const Dashboard = () => {
                 </Card>
             </div>
 
-            <Card title="Quick Actions">
-                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                    <button className="btn btn-primary">+ New Equipment</button>
-                    <button className="btn btn-primary">+ New Request</button>
-                    <button className="btn btn-secondary">View Calendar</button>
-                    <button className="btn btn-secondary">View Kanban</button>
-                </div>
-            </Card>
-
-            <div style={{ marginTop: '32px' }}>
-                <Card title="Recent Activity">
+            <Card title="Recent Activity">
+                {activitiesLoading ? (
+                    <div style={{ color: 'var(--text-light)', textAlign: 'center', padding: '40px 0' }}>
+                        Loading activities...
+                    </div>
+                ) : activities.length === 0 ? (
                     <div style={{ color: 'var(--text-light)', textAlign: 'center', padding: '40px 0' }}>
                         No recent activity
                     </div>
-                </Card>
-            </div>
+                ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                        {activities.map((activity, index) => (
+                            <div
+                                key={index}
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'flex-start',
+                                    gap: '12px',
+                                    padding: '12px',
+                                    borderRadius: '6px',
+                                    backgroundColor: 'var(--light)',
+                                    transition: 'background-color 0.2s'
+                                }}
+                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e5e7eb'}
+                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--light)'}
+                            >
+                                <span style={{ fontSize: '24px', lineHeight: '1' }}>{activity.icon}</span>
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ fontSize: '14px', color: 'var(--text)', marginBottom: '4px' }}>
+                                        {activity.description}
+                                    </div>
+                                    <div style={{ fontSize: '12px', color: 'var(--text-light)' }}>
+                                        {formatTimestamp(activity.timestamp)}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </Card>
         </div>
     );
 };
