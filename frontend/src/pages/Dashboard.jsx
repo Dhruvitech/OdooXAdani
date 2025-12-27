@@ -65,43 +65,55 @@ const Dashboard = () => {
 
     return (
         <div>
-            <h1 style={{ marginBottom: '24px', fontSize: '28px' }}>
+            <h1 style={{ marginBottom: '24px', fontSize: '28px', fontWeight: '700', color: 'var(--text)' }}>
                 Welcome, {user?.name}! 👋
             </h1>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '24px', marginBottom: '32px' }}>
-                <Card>
-                    <div style={{ fontSize: '14px', color: 'var(--text-light)', marginBottom: '8px' }}>
+                <Card style={{
+                    background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)',
+                    borderColor: '#bfdbfe'
+                }}>
+                    <div style={{ fontSize: '14px', color: '#1e40af', marginBottom: '8px', fontWeight: '500' }}>
                         Total Equipment
                     </div>
-                    <div style={{ fontSize: '32px', fontWeight: '700', color: 'var(--primary)' }}>
+                    <div style={{ fontSize: '32px', fontWeight: '700', color: '#1d4ed8' }}>
                         {loading ? '...' : stats.totalEquipment}
                     </div>
                 </Card>
 
-                <Card>
-                    <div style={{ fontSize: '14px', color: 'var(--text-light)', marginBottom: '8px' }}>
+                <Card style={{
+                    background: 'linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%)',
+                    borderColor: '#a5b4fc'
+                }}>
+                    <div style={{ fontSize: '14px', color: '#4338ca', marginBottom: '8px', fontWeight: '500' }}>
                         Active Requests
                     </div>
-                    <div style={{ fontSize: '32px', fontWeight: '700', color: 'var(--warning)' }}>
+                    <div style={{ fontSize: '32px', fontWeight: '700', color: '#4338ca' }}>
                         {loading ? '...' : stats.activeRequests}
                     </div>
                 </Card>
 
-                <Card>
-                    <div style={{ fontSize: '14px', color: 'var(--text-light)', marginBottom: '8px' }}>
+                <Card style={{
+                    background: 'linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)',
+                    borderColor: '#6ee7b7'
+                }}>
+                    <div style={{ fontSize: '14px', color: '#065f46', marginBottom: '8px', fontWeight: '500' }}>
                         Completed
                     </div>
-                    <div style={{ fontSize: '32px', fontWeight: '700', color: 'var(--success)' }}>
+                    <div style={{ fontSize: '32px', fontWeight: '700', color: '#059669' }}>
                         {loading ? '...' : stats.completedRequests}
                     </div>
                 </Card>
 
-                <Card>
-                    <div style={{ fontSize: '14px', color: 'var(--text-light)', marginBottom: '8px' }}>
+                <Card style={{
+                    background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
+                    borderColor: '#fcd34d'
+                }}>
+                    <div style={{ fontSize: '14px', color: '#92400e', marginBottom: '8px', fontWeight: '500' }}>
                         Maintenance Teams
                     </div>
-                    <div style={{ fontSize: '32px', fontWeight: '700', color: 'var(--secondary)' }}>
+                    <div style={{ fontSize: '32px', fontWeight: '700', color: '#d97706' }}>
                         {loading ? '...' : stats.totalTeams}
                     </div>
                 </Card>

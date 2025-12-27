@@ -1,15 +1,16 @@
 .navbar {
-    background: white;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(to right, #ffffff 0%, #f8fafc 100%);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
     position: sticky;
     top: 0;
     z-index: 100;
+    border-bottom: 1px solid var(--border);
 }
 
 .navbar-container {
-    max-width: 1600px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 48px;
     height: 64px;
     display: flex;
     justify-content: space-between;
@@ -20,7 +21,10 @@
 .navbar-brand {
     font-size: 24px;
     font-weight: 700;
-    color: var(--primary);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     text-decoration: none;
     white-space: nowrap;
 }
