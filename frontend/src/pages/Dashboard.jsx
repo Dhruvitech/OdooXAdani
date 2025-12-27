@@ -1,8 +1,35 @@
 import { useAuth } from '../context/AuthContext';
+import { useEffect, useState } from 'react';
 import Card from '../components/common/Card';
+import { getDashboardStats } from '../services/statsService';
 
 const Dashboard = () => {
     const { user } = useAuth();
+    const [stats, setStats] = useState({
+        totalEquipment: 0,
+        activeRequests: 0,
+        completedRequests: 0,
+        totalTeams: 0
+    });
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                setLoading(true);
+                const response = await getDashboardStats();
+                if (response.success) {
+                    setStats(response.data);
+                }
+            } catch (error) {
+                console.error('Failed to fetch dashboard stats:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchStats();
+    }, []);
 
     return (
         <div>
@@ -16,7 +43,7 @@ const Dashboard = () => {
                         Total Equipment
                     </div>
                     <div style={{ fontSize: '32px', fontWeight: '700', color: 'var(--primary)' }}>
-                        0
+                        {loading ? '...' : stats.totalEquipment}
                     </div>
                 </Card>
 
@@ -25,7 +52,7 @@ const Dashboard = () => {
                         Active Requests
                     </div>
                     <div style={{ fontSize: '32px', fontWeight: '700', color: 'var(--warning)' }}>
-                        0
+                        {loading ? '...' : stats.activeRequests}
                     </div>
                 </Card>
 
@@ -34,7 +61,7 @@ const Dashboard = () => {
                         Completed
                     </div>
                     <div style={{ fontSize: '32px', fontWeight: '700', color: 'var(--success)' }}>
-                        0
+                        {loading ? '...' : stats.completedRequests}
                     </div>
                 </Card>
 
@@ -43,7 +70,7 @@ const Dashboard = () => {
                         Maintenance Teams
                     </div>
                     <div style={{ fontSize: '32px', fontWeight: '700', color: 'var(--secondary)' }}>
-                        0
+                        {loading ? '...' : stats.totalTeams}
                     </div>
                 </Card>
             </div>
