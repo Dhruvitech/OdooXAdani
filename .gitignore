@@ -1,4 +1,4 @@
-# Dependencies
+.gitignore # Dependencies
 node_modules/
 */node_modules/
 package-lock.json
@@ -37,7 +37,7 @@ lerna-debug.log*
 .idea
 .DS_Store
 *.suo
-*.ntvs*
+.ntvs
 *.njsproj
 *.sln
 *.sw?
