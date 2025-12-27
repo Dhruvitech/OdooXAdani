@@ -10,6 +10,7 @@ const equipmentRoutes = require('./routes/equipment');
 const teamRoutes = require('./routes/team');
 const requestRoutes = require('./routes/request');
 const statsRoutes = require('./routes/stats');
+const userRoutes = require('./routes/user');
 
 // Connect to database
 connectDB();
@@ -49,6 +50,7 @@ app.use('/api/equipment', equipmentRoutes);
 app.use('/api/teams', teamRoutes);
 app.use('/api/requests', requestRoutes);
 app.use('/api/stats', statsRoutes);
+app.use('/api/users', userRoutes);
 
 // Error handling
 app.use(notFound);

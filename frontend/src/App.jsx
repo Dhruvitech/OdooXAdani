@@ -11,6 +11,9 @@ import Signup from './pages/auth/Signup';
 // Dashboard
 import Dashboard from './pages/Dashboard';
 
+// Profile
+import Profile from './pages/Profile';
+
 // Equipment Pages
 import EquipmentList from './pages/equipment/EquipmentList';
 import EquipmentForm from './pages/equipment/EquipmentForm';
@@ -43,6 +46,18 @@ function App() {
                             <ProtectedRoute>
                                 <Layout>
                                     <Dashboard />
+                                </Layout>
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    {/* Profile Route */}
+                    <Route
+                        path="/profile"
+                        element={
+                            <ProtectedRoute>
+                                <Layout>
+                                    <Profile />
                                 </Layout>
                             </ProtectedRoute>
                         }
