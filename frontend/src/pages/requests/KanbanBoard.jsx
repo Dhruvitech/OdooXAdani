@@ -11,7 +11,15 @@ const KanbanBoard = () => {
         Repaired: [],
         Scrap: [],
     });
+    const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    const columns = [
+        { id: 'New', title: 'New', color: '#3b82f6' },
+        { id: 'In Progress', title: 'In Progress', color: '#f59e0b' },
+        { id: 'Repaired', title: 'Repaired', color: '#10b981' },
+        { id: 'Scrap', title: 'Scrap', color: '#ef4444' }
+    ];
 
     useEffect(() => {
         fetchKanbanData();

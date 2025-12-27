@@ -21,7 +21,7 @@
 
 .calendar-day-header {
     background: var(--dark);
-    color: white;
+    color: rgb(34, 35, 99);
     padding: 12px;
     text-align: center;
     font-weight: 600;

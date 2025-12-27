@@ -129,7 +129,7 @@ const Dashboard = () => {
                         No recent activity
                     </div>
                 ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                         {activities.map((activity, index) => (
                             <div
                                 key={index}
@@ -137,20 +137,30 @@ const Dashboard = () => {
                                     display: 'flex',
                                     alignItems: 'flex-start',
                                     gap: '12px',
-                                    padding: '12px',
-                                    borderRadius: '6px',
-                                    backgroundColor: 'var(--light)',
-                                    transition: 'background-color 0.2s'
+                                    padding: '16px',
+                                    borderRadius: '10px',
+                                    background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)',
+                                    border: '1px solid #bae6fd',
+                                    transition: 'all 0.2s ease',
+                                    cursor: 'pointer'
                                 }}
-                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e5e7eb'}
-                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--light)'}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.background = 'linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)';
+                                    e.currentTarget.style.transform = 'translateX(4px)';
+                                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(56, 189, 248, 0.15)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.background = 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)';
+                                    e.currentTarget.style.transform = 'translateX(0)';
+                                    e.currentTarget.style.boxShadow = 'none';
+                                }}
                             >
                                 <span style={{ fontSize: '24px', lineHeight: '1' }}>{activity.icon}</span>
                                 <div style={{ flex: 1 }}>
-                                    <div style={{ fontSize: '14px', color: 'var(--text)', marginBottom: '4px' }}>
+                                    <div style={{ fontSize: '14px', color: '#0c4a6e', marginBottom: '4px', fontWeight: '500' }}>
                                         {activity.description}
                                     </div>
-                                    <div style={{ fontSize: '12px', color: 'var(--text-light)' }}>
+                                    <div style={{ fontSize: '12px', color: '#075985' }}>
                                         {formatTimestamp(activity.timestamp)}
                                     </div>
                                 </div>

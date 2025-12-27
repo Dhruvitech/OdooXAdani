@@ -1,10 +1,10 @@
 .navbar {
-    background: linear-gradient(to right, #ffffff 0%, #f8fafc 100%);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+    background: linear-gradient(135deg, #e0f2fe 0%, #38bdf826 50%, #7dd3fc 100%);
+    box-shadow: 0 2px 4px #bfdae526, 0 1px 2px #bfdae526;
     position: sticky;
     top: 0;
     z-index: 100;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid rgba(125, 211, 252, 0.3);
 }
 
 .navbar-container {
@@ -21,12 +21,10 @@
 .navbar-brand {
     font-size: 24px;
     font-weight: 700;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #0c4a6e;
     text-decoration: none;
     white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
 }
 
 .navbar-nav {
@@ -42,23 +40,28 @@
     align-items: center;
     gap: 6px;
     padding: 8px 16px;
-    color: var(--text);
+    color: #0c4a6e;
     text-decoration: none;
-    border-radius: 6px;
-    transition: all 0.2s;
+    border-radius: 8px;
+    transition: all 0.2s ease;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     white-space: nowrap;
+    position: relative;
+    background: rgba(255, 255, 255, 0.6);
 }
 
 .nav-link:hover {
-    background-color: var(--light);
-    color: var(--primary);
+    background: transparent;
+    color: #075985;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(14, 165, 233, 0.2);
 }
 
 .nav-link.active {
-    background-color: #eff6ff;
-    color: var(--primary);
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    color: white;
+    box-shadow: 0 3px 10px rgba(14, 165, 233, 0.3);
 }
 
 .nav-icon {

@@ -15,9 +15,9 @@ exports.getDashboardStats = async (req, res) => {
             status: { $in: ['New', 'In Progress'] }
         });
 
-        // Get completed requests count (Repaired status)
+        // Get completed requests count (Repaired or Scrap status)
         const completedRequests = await MaintenanceRequest.countDocuments({
-            status: 'Repaired'
+            status: { $in: ['Repaired', 'Scrap'] }
         });
 
         // Get total maintenance teams count

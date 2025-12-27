@@ -11,6 +11,7 @@ const teamRoutes = require('./routes/team');
 const requestRoutes = require('./routes/request');
 const statsRoutes = require('./routes/stats');
 const userRoutes = require('./routes/user');
+const seedRoutes = require('./routes/seed');
 
 // Connect to database
 connectDB();
@@ -51,6 +52,7 @@ app.use('/api/teams', teamRoutes);
 app.use('/api/requests', requestRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/seed', seedRoutes);
 
 // Error handling
 app.use(notFound);
