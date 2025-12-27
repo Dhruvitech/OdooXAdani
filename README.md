@@ -1,3 +1,9 @@
+# Team Detail
+1. Dhruvi Patel - dhruvimpatel777@gmail.com
+2. Vaza Preeti - preetivaza@gmail.com
+3. Savitri Gamit - savitrigamit123456@gmail.com
+
+
 # GearGuard – The Ultimate Maintenance Tracker
 
 A comprehensive MERN stack maintenance management system inspired by Odoo's Maintenance module. Perfect for hackathons and production deployments.
