@@ -20,7 +20,19 @@ const TeamForm = () => {
     });
 
     const [users, setUsers] = useState([]);
+    const [filteredUsers, setFilteredUsers] = useState([]);
     const [loading, setLoading] = useState(false);
+
+    // Mapping of team types to relevant departments
+    const teamTypeDepartmentMapping = {
+        'Mechanics': ['Maintenance', 'Mechanical', 'Manufacturing', 'Production'],
+        'Electricians': ['Electrical', 'Maintenance', 'Manufacturing'],
+        'IT Support': ['IT', 'IT Support', 'Technology'],
+        'HVAC': ['HVAC', 'Facilities', 'Maintenance'],
+        'Plumbing': ['Plumbing', 'Facilities', 'Maintenance'],
+        'General': ['Maintenance', 'Facilities', 'General'],
+        'Other': [] // Shows all technicians
+    };
 
     useEffect(() => {
         fetchUsers();
@@ -28,6 +40,11 @@ const TeamForm = () => {
             fetchTeam();
         }
     }, [id]);
+
+    // Filter users when team type changes
+    useEffect(() => {
+        filterUsersByTeamType();
+    }, [formData.type, users]);
 
     const fetchTeam = async () => {
         try {
@@ -55,18 +72,48 @@ const TeamForm = () => {
         }
     };
 
+    const filterUsersByTeamType = () => {
+        const relevantDepartments = teamTypeDepartmentMapping[formData.type] || [];
+
+        if (relevantDepartments.length === 0) {
+            // For 'Other' type, show all technicians
+            setFilteredUsers(users);
+        } else {
+            // Filter users by departments that match the team type
+            const filtered = users.filter(user =>
+                relevantDepartments.some(dept =>
+                    user.department && user.department.toLowerCase().includes(dept.toLowerCase())
+                )
+            );
+            setFilteredUsers(filtered);
+        }
+    };
+
     const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
+        const { name, value } = e.target;
+
+        setFormData(prev => {
+            const updated = { ...prev, [name]: value };
+
+            // Reset members when team type changes
+            if (name === 'type') {
+                updated.members = [];
+                updated.teamLead = '';
+            }
+
+            return updated;
         });
     };
 
-    const handleMemberSelect = (e) => {
-        const selectedOptions = Array.from(e.target.selectedOptions, (option) => option.value);
-        setFormData({
-            ...formData,
-            members: selectedOptions,
+    const handleMemberToggle = (userId) => {
+        setFormData(prev => {
+            const isSelected = prev.members.includes(userId);
+            return {
+                ...prev,
+                members: isSelected
+                    ? prev.members.filter(id => id !== userId)
+                    : [...prev.members, userId]
+            };
         });
     };
 
@@ -92,7 +139,16 @@ const TeamForm = () => {
             }
             navigate('/teams');
         } catch (error) {
-            toast.error(error.response?.data?.message || 'Operation failed');
+            console.error('Team operation error:', error);
+            console.error('Error response:', error.response);
+
+            const errorMessage = error.response?.data?.message || error.message || 'Operation failed';
+            toast.error(errorMessage);
+
+            // Show additional alert for debugging authorization issues
+            if (error.response?.status === 403) {
+                alert(`Permission Denied: ${errorMessage}\n\nPlease login as a Manager to create or edit teams.`);
+            }
         } finally {
             setLoading(false);
         }
@@ -150,12 +206,17 @@ const TeamForm = () => {
                                 onChange={handleChange}
                             >
                                 <option value="">No Lead</option>
-                                {users.map((user) => (
+                                {filteredUsers.map((user) => (
                                     <option key={user._id} value={user._id}>
-                                        {user.name} ({user.role})
+                                        {user.name} ({user.role}) - {user.department || 'No Dept'}
                                     </option>
                                 ))}
                             </select>
+                            {filteredUsers.length === 0 && (
+                                <small style={{ color: '#856404', fontSize: '12px', marginTop: '4px', display: 'block' }}>
+                                    No matched technicians available for this team type
+                                </small>
+                            )}
                         </div>
 
                         <div className="form-group">
@@ -185,22 +246,100 @@ const TeamForm = () => {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="members">Team Members (Hold Ctrl/Cmd to select multiple)</label>
-                        <select
-                            id="members"
-                            name="members"
-                            className="form-control"
-                            value={formData.members}
-                            onChange={handleMemberSelect}
-                            multiple
-                            size="5"
-                        >
-                            {users.map((user) => (
-                                <option key={user._id} value={user._id}>
-                                    {user.name} - {user.department || 'No Dept'} ({user.role})
-                                </option>
-                            ))}
-                        </select>
+                        <label style={{ display: 'block', marginBottom: '12px', fontWeight: '600' }}>
+                            Team Members ({formData.members.length} selected)
+                            <span style={{ fontSize: '12px', fontWeight: 'normal', marginLeft: '8px', color: '#666' }}>
+                                {filteredUsers.length > 0
+                                    ? `Showing ${filteredUsers.length} matched technician(s) for ${formData.type}`
+                                    : 'No matching technicians found for this team type'}
+                            </span>
+                        </label>
+
+                        {filteredUsers.length === 0 ? (
+                            <div style={{
+                                padding: '20px',
+                                backgroundColor: '#fff3cd',
+                                border: '1px solid #ffc107',
+                                borderRadius: '4px',
+                                color: '#856404'
+                            }}>
+                                <strong>No matching technicians found.</strong>
+                                <p style={{ margin: '8px 0 0 0', fontSize: '14px' }}>
+                                    There are no users with departments matching "{formData.type}".
+                                    You can either:
+                                </p>
+                                <ul style={{ margin: '8px 0 0 20px', fontSize: '14px' }}>
+                                    <li>Change the team type to match available departments</li>
+                                    <li>Add users with relevant departments first</li>
+                                    <li>Select "Other" team type to see all technicians</li>
+                                </ul>
+                            </div>
+                        ) : (
+                            <div style={{
+                                maxHeight: '300px',
+                                overflowY: 'auto',
+                                border: '1px solid #ddd',
+                                borderRadius: '4px',
+                                padding: '12px',
+                                backgroundColor: '#f8f9fa'
+                            }}>
+                                {filteredUsers.map((user) => (
+                                    <div
+                                        key={user._id}
+                                        style={{
+                                            padding: '10px 12px',
+                                            marginBottom: '8px',
+                                            backgroundColor: formData.members.includes(user._id) ? '#e7f3ff' : 'white',
+                                            border: '1px solid',
+                                            borderColor: formData.members.includes(user._id) ? '#2196F3' : '#ddd',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '10px'
+                                        }}
+                                        onClick={() => handleMemberToggle(user._id)}
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            checked={formData.members.includes(user._id)}
+                                            onChange={() => handleMemberToggle(user._id)}
+                                            style={{ cursor: 'pointer', width: '18px', height: '18px' }}
+                                            onClick={(e) => e.stopPropagation()}
+                                        />
+                                        <div style={{ flex: 1 }}>
+                                            <div style={{ fontWeight: '600', color: '#333' }}>
+                                                {user.name}
+                                            </div>
+                                            <div style={{ fontSize: '13px', color: '#666', marginTop: '2px' }}>
+                                                <span style={{
+                                                    display: 'inline-block',
+                                                    padding: '2px 8px',
+                                                    backgroundColor: user.role === 'Manager' ? '#4CAF50' : '#2196F3',
+                                                    color: 'white',
+                                                    borderRadius: '3px',
+                                                    marginRight: '8px',
+                                                    fontSize: '11px'
+                                                }}>
+                                                    {user.role}
+                                                </span>
+                                                {user.department && (
+                                                    <span>
+                                                        📁 {user.department}
+                                                    </span>
+                                                )}
+                                                {user.phone && (
+                                                    <span style={{ marginLeft: '8px' }}>
+                                                        📞 {user.phone}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
