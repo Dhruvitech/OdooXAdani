@@ -20,6 +20,7 @@
 }
 
 .calendar-day-header {
+
     background: var(--dark);
     color: rgb(34, 35, 99);
     padding: 12px;
